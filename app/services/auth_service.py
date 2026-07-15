@@ -12,6 +12,12 @@ ACCESS_TOKEN_EXPIRE_DAYS = 7
 def get_secret_key() -> str:
     conn = get_connection()
     cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS config (
+            key TEXT PRIMARY KEY,
+            value TEXT NOT NULL
+        )
+    """)
     cursor.execute("SELECT value FROM config WHERE key = ?", ("jwt_secret_key",))
     row = cursor.fetchone()
     if row:
